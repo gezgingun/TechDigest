@@ -1,4 +1,4 @@
-# Agent: Instagram Tech Post (24-hour, sliding carousel)
+# Agent: Summary Tech Post (24-hour, sliding carousel)
 
 ## Purpose
 Produce a 10-slide Instagram carousel ("sliding post") summarizing the most popular tech news from the **last 24 hours**. This is publishable content — it should be punchy, copy-paste-ready, and free of internal commentary. Anything older than 24 hours is for the user's eyes only and must not appear here.
