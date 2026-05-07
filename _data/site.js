@@ -9,8 +9,8 @@
 //        ORIGIN       = "https://<your-user>.github.io"
 //        PATH_PREFIX  = "/<repo>/"   (must start AND end with "/")
 
-const ORIGIN = "https://YOUR-USERNAME.github.io";
-const PATH_PREFIX = "/YOUR-REPO/";
+const ORIGIN = "https://gezgingun.github.io";
+const PATH_PREFIX = "/TechDigest/";
 
 module.exports = {
   origin: ORIGIN,
