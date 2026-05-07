@@ -11,26 +11,32 @@
   h1 { margin-top: 0; }
   h2 { margin-top: 2rem; border-bottom: 1px solid #eee; padding-bottom: 0.25rem; }
   h3 { margin-top: 1.5rem; }
-  nav.site { margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: baseline; }
+  nav.site { margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
   nav.site a { text-decoration: none; }
+  nav.site .nav-links a + a { margin-left: 1rem; }
   p.tagline { margin: 0 0 2rem 0; padding-bottom: 1rem; border-bottom: 1px solid #eee; color: #555; font-size: 0.95rem; }
   p.tagline a { font-weight: 600; }
   ul.digest-list { list-style: none; padding: 0; }
   ul.digest-list li { margin: 0.75rem 0; }
   time { color: #666; font-size: 0.9rem; margin-right: 0.5rem; }
   footer { margin-top: 4rem; padding-top: 1rem; border-top: 1px solid #eee; color: #666; font-size: 0.9rem; }
+  footer p { margin: 0.25rem 0; }
   article :is(p, li) { word-wrap: break-word; overflow-wrap: break-word; }
 </style>
 </head>
 <body>
 <nav class="site">
   <a href="{{ '/' | absUrl }}"><strong>Tech News Digest</strong></a>
-  <a href="{{ '/feed.xml' | absUrl }}">RSS</a>
+  <span class="nav-links">
+    <a href="{{ '/about/' | absUrl }}">About</a>
+    <a href="{{ '/feed.xml' | absUrl }}">RSS</a>
+  </span>
 </nav>
 <p class="tagline">Enjoy the news &amp; don't forget to follow <a href="https://www.instagram.com/gunseli_in_tech/" target="_blank" rel="noopener noreferrer">@gunseli_in_tech</a> on Instagram.</p>
 {{ content | safe }}
 <footer>
-  <a href="{{ '/feed.xml' | absUrl }}">Subscribe via RSS</a>
+  <p>Summaries are short excerpts of articles from the original publishers, with links back to the source — all rights remain with the publishers. Curated and summarized with AI assistance.</p>
+  <p><a href="{{ '/about/' | absUrl }}">About</a> · <a href="{{ '/feed.xml' | absUrl }}">Subscribe via RSS</a></p>
 </footer>
 </body>
 </html>
