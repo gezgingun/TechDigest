@@ -11,8 +11,10 @@
   h1 { margin-top: 0; }
   h2 { margin-top: 2rem; border-bottom: 1px solid #eee; padding-bottom: 0.25rem; }
   h3 { margin-top: 1.5rem; }
-  nav.site { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+  nav.site { margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: baseline; }
   nav.site a { text-decoration: none; }
+  p.tagline { margin: 0 0 2rem 0; padding-bottom: 1rem; border-bottom: 1px solid #eee; color: #555; font-size: 0.95rem; }
+  p.tagline a { font-weight: 600; }
   ul.digest-list { list-style: none; padding: 0; }
   ul.digest-list li { margin: 0.75rem 0; }
   time { color: #666; font-size: 0.9rem; margin-right: 0.5rem; }
@@ -25,6 +27,7 @@
   <a href="{{ '/' | absUrl }}"><strong>Tech News Digest</strong></a>
   <a href="{{ '/feed.xml' | absUrl }}">RSS</a>
 </nav>
+<p class="tagline">Enjoy the news &amp; don't forget to follow <a href="https://www.instagram.com/gunseli_in_tech/" target="_blank" rel="noopener noreferrer">@gunseli_in_tech</a> on Instagram.</p>
 {{ content | safe }}
 <footer>
   <a href="{{ '/feed.xml' | absUrl }}">Subscribe via RSS</a>
