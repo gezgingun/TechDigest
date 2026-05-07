@@ -1,0 +1,10 @@
+node_modules
+_site
+agents
+posts
+.claude
+.github
+memory
+CLAUDE.md
+package.json
+package-lock.json

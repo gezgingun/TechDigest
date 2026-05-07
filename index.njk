@@ -1,0 +1,21 @@
+---
+layout: layouts/base.njk
+permalink: /index.html
+title: Tech News Digest
+---
+<h1>Tech News Digest</h1>
+<p>Tech news rounded up from a curated list of credible sources. <a href="{{ '/feed.xml' | absUrl }}">Subscribe via RSS</a>.</p>
+
+{% set digestlist = collections.digests | reverse %}
+{% if digestlist.length === 0 %}
+<p><em>No digests yet.</em></p>
+{% else %}
+<ul class="digest-list">
+{% for d in digestlist %}
+  <li>
+    <time datetime="{{ d.date | isoDate }}">{{ d.date | isoDate }}</time>
+    <a href="{{ d.url | absUrl }}">{{ d.data.title }}</a>
+  </li>
+{% endfor %}
+</ul>
+{% endif %}
