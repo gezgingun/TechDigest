@@ -14,8 +14,12 @@
   nav.site { margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
   nav.site a { text-decoration: none; }
   nav.site .nav-links a + a { margin-left: 1rem; }
-  p.tagline { margin: 0 0 2rem 0; padding-bottom: 1rem; border-bottom: 1px solid #eee; color: #555; font-size: 0.95rem; }
+  p.tagline { margin: 0 0 1rem 0; padding-bottom: 1rem; border-bottom: 1px solid #eee; color: #555; font-size: 0.95rem; }
   p.tagline a { font-weight: 600; }
+  nav.tabs { display: flex; gap: 0; margin: 0 0 1.5rem 0; border-bottom: 1px solid #ddd; }
+  nav.tabs a { display: inline-block; padding: 0.5rem 1rem; text-decoration: none; color: #555; border-bottom: 2px solid transparent; margin-bottom: -1px; font-size: 0.95rem; }
+  nav.tabs a:hover { color: #0a58ca; }
+  nav.tabs a.active { color: #1a1a1a; border-bottom-color: #0a58ca; font-weight: 600; }
   ul.digest-list { list-style: none; padding: 0; }
   ul.digest-list li { margin: 0.75rem 0; }
   time { color: #666; font-size: 0.9rem; margin-right: 0.5rem; }
@@ -33,6 +37,11 @@
   </span>
 </nav>
 <p class="tagline">Enjoy the news &amp; don't forget to follow <a href="https://www.instagram.com/gunseli_in_tech/" target="_blank" rel="noopener noreferrer">@gunseli_in_tech</a> on Instagram.</p>
+<nav class="tabs" aria-label="Digest cadence">
+  <a href="{{ '/' | absUrl }}"{% if pageType == "daily" %} class="active" aria-current="page"{% endif %}>Daily</a>
+  <a href="{{ '/weekly/' | absUrl }}"{% if pageType == "weekly" %} class="active" aria-current="page"{% endif %}>Weekly</a>
+  <a href="{{ '/monthly/' | absUrl }}"{% if pageType == "monthly" %} class="active" aria-current="page"{% endif %}>Monthly</a>
+</nav>
 {{ content | safe }}
 <footer>
   <p>Summaries are short excerpts of articles from the original publishers, with links back to the source — all rights remain with the publishers. Curated and summarized with AI assistance.</p>

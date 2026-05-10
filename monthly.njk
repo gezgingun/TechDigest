@@ -1,0 +1,22 @@
+---
+layout: layouts/base.njk
+permalink: /monthly/index.html
+title: Tech News Digest — Monthly
+pageType: monthly
+---
+<h1>Monthly Rollups</h1>
+<p>Thirty-day rollups synthesised from daily (and, when available, weekly) digests — month at a glance, top 10 stories, and the categorised story list.</p>
+
+{% set list = collections.monthly | reverse %}
+{% if list.length === 0 %}
+<p><em>No monthly digests yet.</em></p>
+{% else %}
+<ul class="digest-list">
+{% for d in list %}
+  <li>
+    <time datetime="{{ d.date | isoDate }}">{{ d.date | isoDate }}</time>
+    <a href="{{ d.url | absUrl }}">{{ d.data.title }}</a>
+  </li>
+{% endfor %}
+</ul>
+{% endif %}

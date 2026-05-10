@@ -1,14 +1,15 @@
 ---
 layout: layouts/base.njk
 permalink: /index.html
-title: Tech News Digest
+title: Tech News Digest — Daily
+pageType: daily
 ---
 <h1>Tech News Digest</h1>
 <p>Tech news rounded up from a curated list of credible sources. <a href="{{ '/feed.xml' | absUrl }}">Subscribe via RSS</a>.</p>
 
-{% set digestlist = collections.digests | reverse %}
+{% set digestlist = collections.daily | reverse %}
 {% if digestlist.length === 0 %}
-<p><em>No digests yet.</em></p>
+<p><em>No daily digests yet.</em></p>
 {% else %}
 <ul class="digest-list">
 {% for d in digestlist %}

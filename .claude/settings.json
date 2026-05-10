@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:arstechnica.com)"
+      "WebFetch(domain:arstechnica.com)",
+      "PowerShell(npm run build 2>&1)"
     ]
   }
 }

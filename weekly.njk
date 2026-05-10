@@ -1,0 +1,22 @@
+---
+layout: layouts/base.njk
+permalink: /weekly/index.html
+title: Tech News Digest — Weekly
+pageType: weekly
+---
+<h1>Weekly Rollups</h1>
+<p>Seven-day rollups synthesised from the daily digests — themes of the week plus the categorised stories underneath.</p>
+
+{% set list = collections.weekly | reverse %}
+{% if list.length === 0 %}
+<p><em>No weekly digests yet.</em></p>
+{% else %}
+<ul class="digest-list">
+{% for d in list %}
+  <li>
+    <time datetime="{{ d.date | isoDate }}">{{ d.date | isoDate }}</time>
+    <a href="{{ d.url | absUrl }}">{{ d.data.title }}</a>
+  </li>
+{% endfor %}
+</ul>
+{% endif %}
