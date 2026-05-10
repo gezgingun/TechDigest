@@ -11,9 +11,24 @@ Invoke when the user asks for:
 
 ## Behavior
 
+### 0. Pre-run hygiene — prune files older than 30 days
+
+At the **start** of every run, before doing anything else:
+
+1. List the contents of `posts/` (e.g. via `Glob` on `posts/*.md`).
+2. For each filename, parse the leading `YYYY-MM-DD` date prefix.
+3. If that date is **more than 30 days before today**, delete the file. Use today's date from the conversation context (cutoff is `today − 30 days`, inclusive — keep files dated exactly 30 days ago, delete anything older).
+4. If a filename does not start with `YYYY-MM-DD`, skip it (don't delete anything you can't date-parse).
+5. Print one line listing what was deleted (or "no posts older than 30 days").
+
 ### 1. Get the data
-- **Preferred:** if a fresh tech-news digest already exists in `digests/` from today, read it first and filter its items down to the last 24 hours. This avoids re-fetching every feed.
-- **If no fresh digest exists** (or it's already stale): pull from the same RSS/Atom feeds defined in [`tech-news-digest.md`](./tech-news-digest.md) directly. Use only items with a `<pubDate>` within the last 24 hours.
+Pick the cheapest source that still gives a full 24-hour view, in this order:
+
+1. **Fresh digest from today** — if any `digests/YYYY-MM-DD_HHMM_tech-news.md` is dated today, read the most recent one and filter its items to the last 24 hours. No feed fetches needed.
+2. **Yesterday's digest, if recent** — if the most recent digest's filename timestamp is **within the last 24 hours** (e.g. generated last night), read it first to cover the older portion of the 24-hour window, then fetch the feeds only for items published **after that digest's timestamp**. This is the common path on a daily cadence.
+3. **No usable digest** — pull the full last 24 hours directly from the RSS/Atom feeds defined in [`tech-news-digest.md`](./tech-news-digest.md). Use only items with a `<pubDate>` within the last 24 hours.
+
+Always print which path you took and (if path 2) what time range you actually fetched, so the user can see how much work was skipped.
 
 ### 2. Pick the items (max 9 content slides)
 Score each story by **popularity**, in this order:

@@ -11,18 +11,27 @@ Invoke when the user asks for:
 - anything covering more than 24 hours
 
 ## Behavior
-1. **Prefer the RSS/Atom feed for each source** (see Source List below). RSS is more reliable than scraping the homepage, includes structured publish timestamps, and is less likely to be blocked by anti-bot protection. Fall back to the homepage URL only if the feed is unavailable or empty. Use `WebFetch` for both. Use `WebSearch` to fill gaps and surface stories that none of the sources covered.
-2. Filter to items with a `<pubDate>` (or equivalent) within the **last 48 hours** of the current date/time at runtime. Drop everything older — do not include filler from outside the window.
-3. Deduplicate stories that appear across multiple sources — keep the most authoritative source, but note other outlets covering it.
-4. For each remaining story, output:
+
+0. **Pre-run hygiene.** Before fetching anything, run the retention cleanup described in the [Retention](#retention-cleanup-older-than-30-days) section below — it removes digests older than 30 days. Do this first so the next step sees a clean directory.
+
+1. **Determine the fetch window (checkpoint check).** The default window is the last 48 hours from now, but if a recent digest already exists you don't need to re-scan the whole window. After cleanup, list `digests/*.md` and find the most recent file by its filename timestamp (`YYYY-MM-DD_HHMM`):
+   - **If the most recent digest is < 48 hours old:** narrow the window to start at that digest's timestamp (minus a 1-hour overlap to catch boundary articles). The new digest covers `[last digest timestamp − 1h] → now` and is *incremental* — it's expected to be smaller than a full 48-hour run, and the user can chain with the previous digest for the older portion.
+   - **If the most recent digest is ≥ 48 hours old, or none exists:** use the full last 48 hours.
+
+   Print one line stating which mode you chose and the actual window, e.g. `Incremental run: 2026-05-09 12:00 → 2026-05-09 18:30 (last digest 2026-05-09_1200, +1h overlap)`.
+
+2. **Prefer the RSS/Atom feed for each source** (see Source List below). RSS is more reliable than scraping the homepage, includes structured publish timestamps, and is less likely to be blocked by anti-bot protection. Fall back to the homepage URL only if the feed is unavailable or empty. Use `WebFetch` for both. Use `WebSearch` to fill gaps and surface stories that none of the sources covered.
+3. Filter to items with a `<pubDate>` (or equivalent) within the **window from step 1**. Drop everything older — do not include filler from outside the window.
+4. Deduplicate stories that appear across multiple sources — keep the most authoritative source, but note other outlets covering it.
+5. For each remaining story, output:
    - **Headline** (concise rewrite, neutral tone)
    - **Summary** (2–4 sentences covering what happened, who is involved, why it matters)
    - **Source**: outlet name
    - **Link**: direct URL to the original article
    - **Published**: timestamp or "X hours ago"
-5. Group output by topic/category when possible (AI, Hardware, Security, Startups/Funding, Policy/Regulation, Big Tech, Open Source, Science).
-6. Flag anything marked as rumor, leak, or unconfirmed — do not present these as fact.
-7. Prefer primary sources (company blogs, official press releases) when a news outlet is reporting on them; include both links if useful.
+6. Group output by topic/category when possible (AI, Hardware, Security, Startups/Funding, Policy/Regulation, Big Tech, Open Source, Science).
+7. Flag anything marked as rumor, leak, or unconfirmed — do not present these as fact.
+8. Prefer primary sources (company blogs, official press releases) when a news outlet is reporting on them; include both links if useful.
 
 ## Output File
 Write the digest to a file in the `digests/` directory (create it if missing). The filename **must** start with the run's date/time in `YYYY-MM-DD_HHMM` format so files sort chronologically when listed:
@@ -36,6 +45,18 @@ Example: `digests/2026-04-30_0915_tech-news.md`
 Use 24-hour local time. Do not overwrite existing files — if a file with the same minute already exists, append a `-2`, `-3` suffix.
 
 After writing the file, print its path to the user so they can open it.
+
+## Retention (cleanup older than 30 days)
+
+At the **start** of every run, before fetching feeds, prune old digests:
+
+1. List the contents of `digests/` (e.g. via `Glob` on `digests/*.md`).
+2. For each filename, parse the leading `YYYY-MM-DD` date prefix.
+3. If that date is **more than 30 days before today**, delete the file. Use today's date from the conversation context (treat the cutoff as `today − 30 days`, inclusive — keep files dated exactly 30 days ago, delete anything older).
+4. If a filename does not start with `YYYY-MM-DD`, skip it (don't delete anything you can't date-parse).
+5. Print one line listing what was deleted (or "no digests older than 30 days") so the user can see what happened.
+
+This keeps the `digests/` directory bounded without losing recent source-of-truth files that the IG post agent or the user might still want.
 
 ## Output Format (file contents)
 ```
