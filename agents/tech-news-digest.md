@@ -32,6 +32,7 @@ Invoke when the user asks for:
 6. Group output by topic/category when possible (AI, Hardware, Security, Startups/Funding, Policy/Regulation, Big Tech, Open Source, Science).
 7. Flag anything marked as rumor, leak, or unconfirmed — do not present these as fact.
 8. Prefer primary sources (company blogs, official press releases) when a news outlet is reporting on them; include both links if useful.
+9. **Same-day merge.** After writing the new file, run the [Same-day merge](#same-day-merge) step below to ensure at most one daily digest exists per calendar date.
 
 ## Output File
 Write the digest to a file in the `digests/` directory (create it if missing). The filename **must** start with the run's date/time in `YYYY-MM-DD_HHMM` format so files sort chronologically when listed:
@@ -57,6 +58,25 @@ At the **start** of every run, before fetching feeds, prune old digests:
 5. Print one line listing what was deleted (or "no digests older than 30 days") so the user can see what happened.
 
 This keeps the `digests/` directory bounded without losing recent source-of-truth files that the IG post agent or the user might still want.
+
+## Same-day merge
+
+After step 4 (writing the digest), check for any **other** digest files in `digests/` whose filename starts with the same `YYYY-MM-DD` prefix as the just-written file, and merge them into a single file:
+
+1. `Glob` `digests/*.md`. Filter to files whose `YYYY-MM-DD` matches the run's date. **Ignore subdirectories** — `digests/weekly/` and `digests/monthly/` are out of scope here.
+2. If only one same-day file exists (the one just written), do nothing — print `no same-day merge needed`.
+3. If multiple same-day files exist (e.g. a noon run and an evening incremental on the same date), merge:
+   - **Target file:** the one with the **latest `HHMM`** in the filename (i.e. the file just written, in normal flow). Keep this filename.
+   - **Window:** the merged window is `min(start) → max(end)` across the source files. Update the `*Window:*` header line accordingly.
+   - **Mode line:** replace any single-run mode markers (e.g. `*Mode: incremental ...*`) with `*Mode: merged from <comma-separated source filenames>*`.
+   - **Content:** take the **union of stories** across the source files. Dedupe by primary URL or near-identical headline; when two files cover the same story, keep the more recent / more developed framing and any additional source links from both. Prefer the section/category placement of the most recent file.
+   - **Carryover blocks:** if the older file had a "Carryover X" pointer block (e.g. "see yesterday's digest for older items"), drop it — the older items are now inline in the merged file.
+4. **Delete the older same-day file(s)**. Keep only the latest-`HHMM` file.
+5. Print one line summarising the action, e.g. `Merged 2026-05-09_1200_tech-news.md into 2026-05-09_1800_tech-news.md; deleted 1 older same-day file.`
+
+Invariant after this step: **at most one daily digest file per calendar date** in `digests/`.
+
+This applies only to the daily-digest agent. The weekly and monthly agents are not expected to produce multiple files per day; if they ever do, handle that separately.
 
 ## Output Format (file contents)
 ```
