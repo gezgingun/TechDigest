@@ -70,6 +70,7 @@ After step 4 (writing the digest), check for any **other** digest files in `dige
    - **Window:** the merged window is `min(start) → max(end)` across the source files. Update the `*Window:*` header line accordingly.
    - **Mode line:** replace any single-run mode markers (e.g. `*Mode: incremental ...*`) with `*Mode: merged from <comma-separated source filenames>*`.
    - **Content:** take the **union of stories** across the source files. Dedupe by primary URL or near-identical headline; when two files cover the same story, keep the more recent / more developed framing and any additional source links from both. Prefer the section/category placement of the most recent file.
+   - **Preserve all items:** do not drop stories from the older file simply because the new file is later. If a story appears in both files, merge its coverage — keep the richer wording and any extra references.
    - **Carryover blocks:** if the older file had a "Carryover X" pointer block (e.g. "see yesterday's digest for older items"), drop it — the older items are now inline in the merged file.
 4. **Delete the older same-day file(s)**. Keep only the latest-`HHMM` file.
 5. Print one line summarising the action, e.g. `Merged 2026-05-09_1200_tech-news.md into 2026-05-09_1800_tech-news.md; deleted 1 older same-day file.`
